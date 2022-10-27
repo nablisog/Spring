@@ -15,27 +15,15 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 public class WelcomeController {
-    private UserRepository repository;
-    private JwtUtil jwtUtil;
-    private AuthenticationManager authenticationManager;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository repository;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
-    @GetMapping("/all")
-    public List<User> home(){
+    @GetMapping("/allUsers")
+    public List<User> listOfAllUsers(){
         return repository.findAll();
     }
-
-    @PostMapping("/add")
-    public User adduser(@RequestBody User user){
-        User u = new User();
-        u.setEmail(user.getEmail());
-        String password = passwordEncoder.encode(user.getPassword());
-        u.setPassword(password);
-        u.setUserName(user.getUserName());
-        repository.save(u);
-        return u;
-    }
-
 
 
     @PostMapping("/authenticate")
