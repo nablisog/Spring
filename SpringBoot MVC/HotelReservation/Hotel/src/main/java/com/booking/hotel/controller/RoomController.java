@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 public class RoomController {
-    private RoomService roomService;
+    private final RoomService roomService;
 
     @GetMapping("/listOfAllRooms")
     public List<Room> allRooms(){
