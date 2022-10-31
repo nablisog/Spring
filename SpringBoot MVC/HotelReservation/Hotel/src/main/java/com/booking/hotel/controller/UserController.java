@@ -54,6 +54,8 @@ public class UserController {
         } catch (Exception e) {
             throw new Exception("Invalid username/password");
         }
+        User user = userService.findUserUsername(authRequest.getUserName());
+        if(!user.isActive()) throw new Exception("Deactivated Account");
         return jwtUtil.generateToken(authRequest.getUserName());
     }
 
