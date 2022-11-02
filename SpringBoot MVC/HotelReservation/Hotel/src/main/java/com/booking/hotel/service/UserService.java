@@ -35,7 +35,7 @@ public class UserService {
     }
 
     public User register(User user) throws Exception {
-        check_If_AlreadyExists(user.getUserName(),user.getEmail());
+        check_If_AlreadyExists(user.getEmail());
         User newUser = registerUser(user);
         userRepository.save(newUser);
         String text = "Welcome, " + newUser.getFirstName() + " Your profile has been created";
@@ -43,26 +43,11 @@ public class UserService {
         return newUser;
     }
 
-    private void check_If_AlreadyExists(String userName,String email) throws Exception {
-        for(User user : getAllUsers()){
-            if(user.getUserName().equalsIgnoreCase(userName)){
-                throw new Exception("User name already EXIT");
-            }
-
-            if(user.getEmail().equalsIgnoreCase(email)){
-                throw new Exception("Email already EXIT");
-            }
-        }
+    private boolean check_If_AlreadyExists(String email) throws Exception {
+        return userRepository.findUserByEmail(email) == null;
     }
 
 
-    @SneakyThrows
-    public User findUserUserNameAndPassword(String userName, String password) {
-        User user = userRepository.findUserByUserNameAndPassword(userName,password);
-        if(user == null) throw new Exception("User Not Found");
-        if(!user.isActive()) throw new Exception("Account is Deactivated");
-        return user;
-    }
     public User activateUser(String email){
         User user = finduserByEmail(email);
         user.setActive(true);
