@@ -74,10 +74,9 @@ public class UserService {
 
     public User updateUser(String id, User user) {
         User update = userRepository.findById(id).get();
-        update.setFirstName(user.getUserName());
-        update.setLastName(user.getLastName());
-        update.setEmail(user.getEmail());
-        update.setPassword(update.getPassword());
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setSkipNullEnabled(true);
+        mapper.map(user,update);
         userRepository.save(update);
         String text = "Hi, " + update.getFirstName() + " Your profile has been updated";
         emailService.sendEmail(user.getEmail(),"USER UPDATE" ,text);
