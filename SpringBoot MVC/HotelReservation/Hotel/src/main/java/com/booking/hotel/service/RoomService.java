@@ -53,7 +53,7 @@ public class RoomService {
                 return room.getPrice();
             }
         }
-            throw new Exception("Not founded");
+            throw new Exception("Room is NOT found");
     }
 
 
