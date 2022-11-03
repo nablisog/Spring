@@ -41,10 +41,16 @@ public class UserController {
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<User> userSignup(@Valid @RequestBody User user) throws Exception {
-        User signup = userService.register(user);
-        return new ResponseEntity<>(signup, HttpStatus.CREATED);
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@Valid @RequestBody User user){
+        if (userService.emailExits(user.getEmail())){
+            return new ResponseEntity<>("Email Already Exist",HttpStatus.BAD_REQUEST);
+        }
+        if (userService.userNameTaken(user.getUserName())){
+            return new ResponseEntity<>("Username is taken",HttpStatus.BAD_REQUEST);
+        }
+        userService.register(user);
+        return ResponseEntity.ok("Account is Successfully created");
     }
 
     @PostMapping("/login")
