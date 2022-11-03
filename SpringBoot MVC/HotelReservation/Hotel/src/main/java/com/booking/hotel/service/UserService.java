@@ -43,9 +43,14 @@ public class UserService {
         return newUser;
     }
 
-    private boolean check_If_AlreadyExists(String email) throws Exception {
-        return userRepository.findUserByEmail(email) == null;
+    public boolean emailExits(String email) {
+       return userRepository.findUserByEmail(email) != null;
     }
+
+    public boolean userNameTaken(String username) {
+       return userRepository.findUsersByUserName(username).isPresent();
+    }
+
 
 
     public User activateUser(String email){
