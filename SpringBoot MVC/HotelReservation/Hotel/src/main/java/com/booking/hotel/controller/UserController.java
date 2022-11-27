@@ -16,19 +16,15 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-
-@RestController
 @AllArgsConstructor
+@RestController
+@RequestMapping("/user")
 public class UserController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
 
-    @GetMapping("/ListOfAllUsers")
-    public List<User> allUsers() {
-        return userService.getAllUsers();
-    }
 
     @GetMapping("/activeUsers")
     public List<User>activeUsers(){
@@ -66,30 +62,38 @@ public class UserController {
     }
 
     @PutMapping("/updateUser/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id")String id,@Valid @RequestBody User user) {
-        User updateUser = userService.updateUser(id,user);
-        return new ResponseEntity<>(updateUser, HttpStatus.OK);
+    public ResponseEntity<String> updateUser(@PathVariable("id")String id, @Valid @RequestBody User user) {
+        if (userRepository.findById(id).isEmpty()){
+            return new ResponseEntity<>("User doesn't exit",HttpStatus.BAD_REQUEST);
+        }
+        userService.updateUser(id,user);
+        return new ResponseEntity<>("Account has been updated", HttpStatus.OK);
     }
 
     @DeleteMapping("/deactivate/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable("id") String id) {
+        if (userRepository.findById(id).isEmpty()){
+            return new ResponseEntity<>("User doesn't exit",HttpStatus.BAD_REQUEST);
+        }
         userService.deactivateUser(id);
         return ResponseEntity.ok("User has been deactivated");
     }
-    @PutMapping("/activateAccout/{̋email}")
+
+    @PostMapping("/activateAccount/{̋email}")
     public ResponseEntity<String> activateAccount( @PathVariable("̋email") String email){
+        if (!userService.emailExits(email)){
+            return new ResponseEntity<>("Email doesn't Exit",HttpStatus.BAD_REQUEST);
+        }
         userService.activateUser(email);
         return ResponseEntity.ok("Account has been activated");
 
     }
-    @PostMapping("/activateUser/{email}")
-    public ResponseEntity<User> activateUser(@PathVariable("email")String email){
-        User user = userService.activateUser(email);
-        return new ResponseEntity<>(user,HttpStatus.OK);
-    }
 
     @PostMapping("/resetPassword/{email}")
-    public ResponseEntity<String> resetPassword(@PathVariable("email")String email) throws Exception {
+    public ResponseEntity<String> resetPassword(@PathVariable("email")String email) {
+        if (!userService.emailExits(email)){
+            return new ResponseEntity<>("Email doesn't Exit",HttpStatus.BAD_REQUEST);
+        }
         userService.resetPassword(email);
         return ResponseEntity.ok("A new password is sent to your email");
     }
