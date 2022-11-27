@@ -35,7 +35,6 @@ public class UserService {
     }
 
     public User register(User user) throws Exception {
-        check_If_AlreadyExists(user.getEmail());
         User newUser = registerUser(user);
         userRepository.save(newUser);
         String text = "Welcome, " + newUser.getFirstName() + " Your profile has been created";
@@ -50,8 +49,6 @@ public class UserService {
     public boolean userNameTaken(String username) {
        return userRepository.findUsersByUserName(username).isPresent();
     }
-
-
 
     public User activateUser(String email){
         User user = finduserByEmail(email);
@@ -85,8 +82,6 @@ public class UserService {
                 "your new password is:- " + password);
 
     }
-
-
 
     public User findUserUsername(String username) throws Exception {
         return userRepository.findUsersByUserName(username).orElseThrow(
