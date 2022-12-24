@@ -39,7 +39,7 @@ public class OrderController{
         return new ResponseEntity<>("Order has been confirmed",HttpStatus.CREATED);
     }
     @PutMapping("/updateOrder/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable("id")String id, @Valid @RequestBody OrderDto details) {
+    public ResponseEntity<String> updateOrder(@PathVariable("id")String id, @Valid @RequestBody OrderDto details) {
         if (orderRepository.findById(id).isEmpty()){
             return new ResponseEntity<>("Order doesn't exit",HttpStatus.BAD_REQUEST);
         }
